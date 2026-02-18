@@ -17,8 +17,6 @@ import com.rays.dto.TestDTO;
 @RequestMapping(value = "ors")
 public class OrsCtl {
 	
-	
-	
 	@GetMapping("display1")
 	public TestDTO display1() {
 		
@@ -79,6 +77,9 @@ public class OrsCtl {
 		RoleList roleList = new RoleList();
 		 roleList.add("admin");
 		 roleList.add("student");
+		 roleList.add("Faculty");
+		 roleList.add("kiosk");
+		 roleList.add("College");
 		 
 		 res.addResult("roleList", roleList);
 		 res.setSuccess(true);
