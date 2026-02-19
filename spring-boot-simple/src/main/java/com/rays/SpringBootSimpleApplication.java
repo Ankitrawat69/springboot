@@ -11,5 +11,4 @@ public class SpringBootSimpleApplication {
 		SpringApplication.run(SpringBootSimpleApplication.class, args);
 		System.out.println("Spring Start Successfully");
 	}
-
 }

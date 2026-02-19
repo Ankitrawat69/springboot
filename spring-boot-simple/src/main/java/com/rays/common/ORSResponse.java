@@ -16,7 +16,6 @@ public class ORSResponse {
 	public ORSResponse() {
 
 	}
-
 	public ORSResponse(boolean success) {
 		this.success = success;
 	}
@@ -36,7 +35,7 @@ public class ORSResponse {
 	public void setResult(Map<String, Object> result) {
 		this.result = result;
 	}
-
+	
 	public void addInputError(Object value) {
 		result.put(INPUT_ERROR, value);
 	}
@@ -52,5 +51,4 @@ public class ORSResponse {
 	public void addResult(String key, Object value) {
 		result.put(key, value);
 	}
-
 }

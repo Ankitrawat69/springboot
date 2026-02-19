@@ -1,5 +1,7 @@
 package com.rays.ctl;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rays.common.ORSResponse;
@@ -94,6 +97,22 @@ public class RoleCtl {
 			res.setSuccess(true);
 		}
 		return res;
+	}
+	
+	@RequestMapping(value = "/search/{pageNo}", method = {RequestMethod.GET, RequestMethod.POST})
+	public ORSResponse search(@RequestBody RoleForm form, @PathVariable(required = false) int pageNo) {
 		
+		ORSResponse res = new ORSResponse();
+		
+		int pageSize = 5;
+		
+	    List<RoleDTO> list =  roleService.search(null, pageNo, pageSize);
+	    
+	    if(list.size()> 0) {
+	    	res.setSuccess(true);
+	    	res.addData(list);
+	    	return res;
+	    } 
+	    return res;  
 	}
 }

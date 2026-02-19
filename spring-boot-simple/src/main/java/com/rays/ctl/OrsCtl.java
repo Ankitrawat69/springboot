@@ -84,8 +84,5 @@ public class OrsCtl {
 		 res.addResult("roleList", roleList);
 		 res.setSuccess(true);
 		 return res;
-
-		
-		
 	}
 }
