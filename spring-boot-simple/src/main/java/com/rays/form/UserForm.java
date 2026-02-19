@@ -1,0 +1,81 @@
+package com.rays.form;
+
+import java.util.Date;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.rays.common.BaseDTO;
+import com.rays.common.BaseForm;
+import com.rays.dto.UserDTO;
+
+public class UserForm extends BaseForm{ 
+
+	@NotEmpty(message = "first name is required")
+	private String firstName;
+
+	@NotEmpty(message = "Last name is required")
+	private String lastName;
+
+	@NotEmpty(message = "LoginId is required")
+	private String loginId;
+
+	@NotEmpty(message = "Password is required")
+	private String password;
+
+	@NotNull(message = "Dob is required")
+	private Date dob;
+
+	private Long roleId;
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	
+
+	}
+
+}
