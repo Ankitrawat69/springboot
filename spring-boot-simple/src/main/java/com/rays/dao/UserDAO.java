@@ -53,7 +53,7 @@ public class UserDAO {
 		TypedQuery<UserDTO> tq =  entityManager.createQuery(cq);
 		
 		if(pageSize > 0) {
-			tq.setFirstResult(pageNo);
+			tq.setFirstResult(pageNo * pageSize);
 			tq.setMaxResults(pageSize);
 		}
 		 list = tq.getResultList();
