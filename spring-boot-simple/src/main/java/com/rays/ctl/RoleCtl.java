@@ -38,9 +38,8 @@ public class RoleCtl {
 
 		RoleDTO dto = new RoleDTO();
 
-		dto.setName(form.getName());
-		dto.setDescription(form.getDescription());
-
+        dto =   (RoleDTO) form.getDto();
+		
 		long id = roleService.add(dto);
 
 		res.setSuccess(true);
@@ -57,9 +56,8 @@ public class RoleCtl {
 		ORSResponse res = new ORSResponse();
 		RoleDTO dto = new RoleDTO();
 		
-		dto.setId(form.getId());
-		dto.setName(form.getName());
-		dto.setDescription(form.getDescription());
+		dto = (RoleDTO) form.initDTO(dto);
+		dto = (RoleDTO) form.getDto();
 		
 		roleService.update(dto);
 		
@@ -104,9 +102,11 @@ public class RoleCtl {
 		
 		ORSResponse res = new ORSResponse();
 		
+		RoleDTO dto = (RoleDTO) form.getDto();
+		
 		int pageSize = 5;
 		
-	    List<RoleDTO> list =  roleService.search(null, pageNo, pageSize);
+	    List<RoleDTO> list =  roleService.search(dto, pageNo, pageSize);
 	    
 	    if(list.size()> 0) {
 	    	res.setSuccess(true);

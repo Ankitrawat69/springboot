@@ -31,21 +31,16 @@ public class UserCtl extends BaseCtl {
 	public ORSResponse save(@RequestBody @Valid UserForm form, BindingResult bindingResult) {
 
 		ORSResponse res = new ORSResponse();
-		
+
 		res = validate(bindingResult);
-		if(!res.isSuccess()) {
+		if (!res.isSuccess()) {
 			return res;
 		}
 
 		UserDTO dto = new UserDTO();
 
-		dto.setFirstName(form.getFirstName());
-		dto.setLastName(form.getLastName());
-		dto.setLoginId(form.getLoginId());
-		dto.setPassword(form.getPassword());
-		dto.setDob(form.getDob());
-		dto.setRoleId(form.getRoleId());
-	
+		dto = (UserDTO) form.getDto();
+
 		long id = userService.add(dto);
 
 		res.setSuccess(true);
@@ -55,30 +50,24 @@ public class UserCtl extends BaseCtl {
 		return res;
 
 	}
-	
+
 	@PostMapping("update")
 	public ORSResponse update(@RequestBody UserForm form) {
-		
+
 		ORSResponse res = new ORSResponse();
 		UserDTO dto = new UserDTO();
-		
-		dto.setId(form.getId());
-		dto.setFirstName(form.getFirstName());
-		dto.setLastName(form.getLastName());
-		dto.setLoginId(form.getLoginId());
-		dto.setPassword(form.getPassword());
-		dto.setDob(form.getDob());
-		dto.setRoleId(form.getRoleId());
-		
-		
+
+		dto = (UserDTO) form.initDTO(dto);
+		dto = (UserDTO) form.getDto();
+
 		userService.update(dto);
-		
+
 		res.setSuccess(true);
 		res.addMessage("User update successfully");
-		
+
 		return res;
 	}
-	
+
 	@PostMapping("delete/{ids}")
 	public ORSResponse delete(@PathVariable(required = false) long[] ids) {
 		ORSResponse res = new ORSResponse();
@@ -94,35 +83,37 @@ public class UserCtl extends BaseCtl {
 		}
 		return res;
 	}
-	
+
 	@GetMapping("get/{id}")
 	public ORSResponse get(@PathVariable(required = false) long id) {
-		
+
 		ORSResponse res = new ORSResponse();
-		
+
 		UserDTO dto = userService.findById(id);
-		
-		if(dto != null) {
+
+		if (dto != null) {
 			res.addData(dto);
 			res.setSuccess(true);
 		}
 		return res;
 	}
-	
-	@RequestMapping(value = "/search/{pageNo}", method = {RequestMethod.GET, RequestMethod.POST})
+
+	@RequestMapping(value = "/search/{pageNo}", method = { RequestMethod.GET, RequestMethod.POST })
 	public ORSResponse search(@RequestBody UserForm form, @PathVariable(required = false) int pageNo) {
-		
+
 		ORSResponse res = new ORSResponse();
-		
+
+		UserDTO dto = (UserDTO) form.getDto();
+
 		int pageSize = 5;
-		
-	    List<UserDTO> list =  userService.search(null, pageNo, pageSize);
-	    
-	    if(list.size()> 0) {
-	    	res.setSuccess(true);
-	    	res.addData(list);
-	    	return res;
-	    } 
-	    return res;  
+
+		List<UserDTO> list = userService.search(dto, pageNo, pageSize);
+
+		if (list.size() > 0) {
+			res.setSuccess(true);
+			res.addData(list);
+			return res;
+		}
+		return res;
 	}
 }

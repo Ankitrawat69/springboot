@@ -1,5 +1,6 @@
 package com.rays.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,11 +8,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.rays.dto.RoleDTO;
 import com.rays.dto.UserDTO;
 
 @Repository
@@ -20,8 +23,17 @@ public class UserDAO {
 	@PersistenceContext
 	public EntityManager entityManager;
 	
+	@Autowired
+	RoleDAO roledao;
 	
+	public void populate(UserDTO dto) {
+	   if (dto.getRoleId() != null && dto.getRoleId() > 0) {
+	      RoleDTO roledto = 	roledao.findByPk(dto.getRoleId());
+	         dto.setRoleName(roledto.getName());
+	      }
+    } 
 	public long add(UserDTO dto) {
+		populate(dto);
 		entityManager.persist(dto);
 		return dto.getId();
 	}
@@ -46,9 +58,19 @@ public class UserDAO {
 		
 		CriteriaQuery<UserDTO> cq = builder.createQuery(UserDTO.class);
 		
+		List<Predicate> predicateList = new ArrayList<Predicate>();
+		
 		Root<UserDTO> qr = cq.from(UserDTO.class);
 		
-		cq.select(qr);
+		if(dto != null) {
+			if(dto.getFirstName() != null && dto.getFirstName().length() > 0) {
+				predicateList.add(builder.like(qr.get("firstName"), dto.getFirstName()+ "%"));
+			}
+			if(dto.getLastName() != null && dto.getLastName().length() > 0) {
+				predicateList.add(builder.like(qr.get("lastName"), dto.getLastName() + "%"));
+			}
+		}
+		cq.where(predicateList.toArray(new Predicate[predicateList.size()]));
 		
 		TypedQuery<UserDTO> tq =  entityManager.createQuery(cq);
 		

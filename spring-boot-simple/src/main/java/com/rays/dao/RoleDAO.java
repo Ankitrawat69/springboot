@@ -1,5 +1,6 @@
 package com.rays.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
@@ -44,9 +46,16 @@ public class RoleDAO {
 		
 	    CriteriaQuery<RoleDTO> cq = builder.createQuery(RoleDTO.class);
 	    
+	    List<Predicate> predicateList = new ArrayList<Predicate>();
+	    
 	    Root<RoleDTO> qroot =  cq.from(RoleDTO.class);
 	    
-	    cq.select(qroot);
+	    if(dto != null) {
+			if(dto.getName() != null && dto.getName().length() > 0) {
+				predicateList.add(builder.like(qroot.get("name"), dto.getName()+ "%"));
+			}
+	    }
+	    cq.where(predicateList.toArray(new Predicate[predicateList.size()]));
 	    
 	    TypedQuery<RoleDTO> tq =  entityManager.createQuery(cq);
 	    
