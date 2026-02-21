@@ -27,6 +27,16 @@ public class UserForm extends BaseForm{
 	private Date dob;
 
 	private Long roleId;
+	
+	private Long imageId;
+
+	public Long getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(Long imageId) {
+		this.imageId = imageId;
+	}
 
 	public String getFirstName() {
 		return firstName;

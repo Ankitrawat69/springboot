@@ -7,46 +7,47 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rays.dao.UserDAO;
+import com.rays.dao.CollegeDAO;
+import com.rays.dto.CollegeDTO;
 import com.rays.dto.UserDTO;
 
 @Service
 @Transactional
-public class UserService {
+public class CollegeService {
 	
 	@Autowired
-	public UserDAO userDao;
+	CollegeDAO collegeDAO;
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public long add(UserDTO dto) {
-		long pk = userDao.add(dto);
+	public long add(CollegeDTO dto) {
+		long pk = collegeDAO.add(dto);
 		return pk;
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void update(UserDTO dto) {
-		userDao.update(dto);
+	public void update(CollegeDTO dto) {
+		collegeDAO.update(dto);
+	}
+	
+	@Transactional(readOnly = true)
+	public CollegeDTO findById(long pk) {
+		CollegeDTO dto = collegeDAO.findbyPk(pk);
+		return dto;
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void delete(long id) {
 		try {
-			UserDTO dto = findById(id);
-			userDao.delete(dto);
+			CollegeDTO dto = findById(id);
+				collegeDAO.delete(dto);
 		} catch (RuntimeException e) {
 			System.out.println(e.getMessage());
 		}
 	}
-
-	@Transactional(readOnly = true)
-	public UserDTO findById(long pk) {
-		UserDTO dto = userDao.findByPk(pk);
-		return dto;
-	}
 	
 	@Transactional(readOnly = true)
-	public List<UserDTO> search(UserDTO dto, int pageNo, int pageSize){
-		return userDao.search(dto, pageNo, pageSize);
+	public List<CollegeDTO> search(CollegeDTO dto, int pageNo, int pageSize){
+		return collegeDAO.search(dto, pageNo, pageSize);
 	}
 
 }

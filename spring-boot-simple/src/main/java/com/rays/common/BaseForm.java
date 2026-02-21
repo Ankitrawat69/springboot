@@ -24,4 +24,46 @@ public class BaseForm {
 		}
 		return dto;
 	}
+	
+	protected String createdBy;
+
+	protected String modifiedBy;
+
+	protected long createdDatetime;
+
+	protected long modifiedDatetime;
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public long getCreatedDatetime() {
+		return createdDatetime;
+	}
+
+	public void setCreatedDatetime(long createdDatetime) {
+		this.createdDatetime = createdDatetime;
+	}
+
+	public long getModifiedDatetime() {
+		return modifiedDatetime;
+	}
+
+	public void setModifiedDatetime(long modifiedDatetime) {
+		this.modifiedDatetime = modifiedDatetime;
+	}
+	
+	
 }
