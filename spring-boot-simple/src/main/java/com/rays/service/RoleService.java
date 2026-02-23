@@ -45,7 +45,7 @@ public class RoleService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<RoleDTO> search(RoleDTO dto, int pageNo, int pageSize){
+	public List search(RoleDTO dto, int pageNo, int pageSize){
 		return roleDao.search(dto, pageNo, pageSize);
 	}
 

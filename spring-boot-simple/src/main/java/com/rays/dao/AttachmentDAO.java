@@ -29,7 +29,5 @@ public class AttachmentDAO {
 	public AttachmentDTO findByPk(long pk) {
 		AttachmentDTO dto = entityManager.find(AttachmentDTO.class,pk);
 		return dto;
-		
 	}
-
 }

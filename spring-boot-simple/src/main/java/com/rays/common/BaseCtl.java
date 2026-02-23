@@ -28,5 +28,4 @@ public class BaseCtl {
 		}
 		return res;
 	}
-
 }
