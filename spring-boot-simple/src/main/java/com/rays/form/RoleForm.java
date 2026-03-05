@@ -9,10 +9,9 @@ import com.rays.dto.UserDTO;
 
 public class RoleForm extends BaseForm {
 
-	protected Long id = null;
-
+	@NotEmpty(message = "Role name is required")
 	private String name;
-
+	@NotEmpty(message = "Description is required")
 	private String description;
 
 	public Long getId() {
@@ -22,7 +21,6 @@ public class RoleForm extends BaseForm {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public String getName() {
 		return name;
 	}

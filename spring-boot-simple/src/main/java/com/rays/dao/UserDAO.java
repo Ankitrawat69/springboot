@@ -11,87 +11,73 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.rays.dto.AttachmentDTO;
 import com.rays.dto.RoleDTO;
 import com.rays.dto.UserDTO;
+import com.rays.service.AttachmentService;
 
 @Repository
 public class UserDAO {
-	
+
 	@PersistenceContext
-	public EntityManager entityManager;
+	EntityManager entityManager;
+
+	@Autowired
+	RoleDAO roleDao;
 	
 	@Autowired
-	RoleDAO roledao;
-	
+	AttachmentService attachmentService;
+
 	public void populate(UserDTO dto) {
-	   if (dto.getRoleId() != null && dto.getRoleId() > 0) {
-	      RoleDTO roledto = 	roledao.findByPk(dto.getRoleId());
-	         dto.setRoleName(roledto.getName());
-	      }
-    } 
+		if (dto.getRoleId() != null && dto.getRoleId() > 0) {
+			RoleDTO roleDto = roleDao.findByPk(dto.getRoleId());
+			dto.setRoleName(roleDto.getName());
+		}
+
+	}
+
 	public long add(UserDTO dto) {
 		populate(dto);
 		entityManager.persist(dto);
 		return dto.getId();
 	}
-	
+
 	public void update(UserDTO dto) {
+		populate(dto);
 		entityManager.merge(dto);
+
 	}
-	
+
 	public void delete(UserDTO dto) {
+		if (dto.getImageId() != null && dto.getImageId() > 0) {
+			AttachmentDTO adto = attachmentService.findById(dto.getImageId());
+			if (adto != null) {
+				attachmentService.delete(adto.getId());
+			}
+		}
+
 		entityManager.remove(dto);
 	}
+
 	public UserDTO findByPk(long pk) {
-		UserDTO dto = entityManager.find(UserDTO.class,pk);
+		UserDTO dto = entityManager.find(UserDTO.class, pk);
 		return dto;
 	}
-	
-	public List<UserDTO> search(UserDTO dto,int pageNo,int pageSize){
-		
-		List<UserDTO> list = null;
-		
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		
-		CriteriaQuery<UserDTO> cq = builder.createQuery(UserDTO.class);
-		
-		List<Predicate> predicateList = new ArrayList<Predicate>();
-		
-		Root<UserDTO> qr = cq.from(UserDTO.class);
-		
-		if(dto != null) {
-			if(dto.getFirstName() != null && dto.getFirstName().length() > 0) {
-				predicateList.add(builder.like(qr.get("firstName"), dto.getFirstName()+ "%"));
-			}
-			if(dto.getLastName() != null && dto.getLastName().length() > 0) {
-				predicateList.add(builder.like(qr.get("lastName"), dto.getLastName() + "%"));
-			}
-		}
-		cq.where(predicateList.toArray(new Predicate[predicateList.size()]));
-		
-		TypedQuery<UserDTO> tq =  entityManager.createQuery(cq);
-		
-		if(pageSize > 0) {
-			tq.setFirstResult(pageNo * pageSize);
-			tq.setMaxResults(pageSize);
-		}
-		 list = tq.getResultList();
-		    return list;
-	}
-	
+
 	public UserDTO findByUniqueKey(String attribute, String value) {
-		
+
 		List<UserDTO> list = null;
-		
+
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
 		CriteriaQuery<UserDTO> cq = builder.createQuery(UserDTO.class);
 
 		Root<UserDTO> qRoot = cq.from(UserDTO.class);
-		
+
 		Predicate condition = builder.equal(qRoot.get(attribute), value);
 
 		cq.where(condition);
@@ -105,7 +91,50 @@ public class UserDAO {
 		if (list.size() > 0) {
 
 			dto = list.get(0);
+
 		}
+
 		return dto;
 	}
+
+	public List<UserDTO> search(UserDTO dto, int pageNo, int pageSize) {
+
+		List<UserDTO> list = null;
+
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+		CriteriaQuery<UserDTO> cq = builder.createQuery(UserDTO.class);
+
+		List<Predicate> pList = new ArrayList<Predicate>();
+
+		Root<UserDTO> qroot = cq.from(UserDTO.class);
+
+		if (dto != null) {
+			if (dto.getFirstName() != null && dto.getFirstName().length() > 0) {
+				pList.add(builder.like(qroot.get("firstName"), dto.getFirstName() + "%"));
+
+			}
+			if (dto.getLastName() != null && dto.getLastName().length() > 0) {
+				pList.add(builder.like(qroot.get("lastName"), dto.getLastName() + "%"));
+
+			}
+			if (dto.getRoleId() != null && dto.getRoleId() > 0) {
+				pList.add(builder.equal(qroot.get("roleId"), dto.getRoleId()));
+
+			}
+
+		}
+		cq.where(pList.toArray(new Predicate[pList.size()]));
+
+		TypedQuery<UserDTO> tquery = entityManager.createQuery(cq);
+
+		if (pageSize > 0) {
+			tquery.setFirstResult(pageNo * pageSize);
+			tquery.setMaxResults(pageSize);
+
+		}
+		list = tquery.getResultList();
+		return list;
+	}
+
 }

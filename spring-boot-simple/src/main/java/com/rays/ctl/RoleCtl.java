@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rays.common.BaseCtl;
 import com.rays.common.ORSResponse;
 import com.rays.dto.RoleDTO;
 import com.rays.form.RoleForm;
@@ -21,7 +22,7 @@ import com.rays.service.RoleService;
 
 @RestController
 @RequestMapping(value = "Role")
-public class RoleCtl {
+public class RoleCtl  extends BaseCtl{
 
 	@Autowired
 	RoleService roleService;
@@ -30,6 +31,11 @@ public class RoleCtl {
 	public ORSResponse save(@RequestBody @Valid RoleForm form, BindingResult bindingResult) {
 
 		ORSResponse res = new ORSResponse();
+		
+		res = validate(bindingResult);
+		if (!res.isSuccess()) {
+			return res;
+		}
 
 		if (bindingResult.hasErrors()) {
 			res.addInputError("role and description is required");
